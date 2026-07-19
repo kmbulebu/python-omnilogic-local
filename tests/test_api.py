@@ -246,7 +246,7 @@ async def test_async_get_filter_diagnostics_generates_valid_xml() -> None:
 @pytest.mark.asyncio
 async def test_async_get_chlorinator_measurement_generates_valid_xml() -> None:
     """Test chlorinator measurement request generation."""
-    api = OmniLogicAPI("192.168.1.100")
+    api = OmniLogicAPI("controller.local")
 
     with patch.object(api, "async_send_and_receive", new_callable=AsyncMock) as mock_send:
         mock_send.return_value = '<?xml version="1.0"?><Response><Name>GetCHLORMeasurementRsp</Name></Response>'
@@ -267,7 +267,7 @@ async def test_async_get_chlorinator_measurement_generates_valid_xml() -> None:
 @pytest.mark.asyncio
 async def test_async_get_chlorinator_relay_polarity_generates_valid_xml() -> None:
     """Test chlorinator relay polarity request generation."""
-    api = OmniLogicAPI("192.168.1.100")
+    api = OmniLogicAPI("controller.local")
 
     with patch.object(api, "async_send_and_receive", new_callable=AsyncMock) as mock_send:
         mock_send.return_value = '<?xml version="1.0"?><Response><Name>GetCHLORRelayPolarityRsp</Name></Response>'

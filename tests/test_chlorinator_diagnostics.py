@@ -98,10 +98,10 @@ def test_chlorinator_measurement_preserves_off_state() -> None:
     """Represent zero instantaneous values returned while disabled."""
     measurement = ChlorinatorMeasurement.load_xml(OFF_MEASUREMENT_XML)
 
-    assert measurement.voltage == 0.0
-    assert measurement.current == 0.0
-    assert measurement.cell_temperature_f == 0.0
-    assert measurement.board_temperature_f == 0.0
+    assert measurement.voltage == pytest.approx(0.0)
+    assert measurement.current == pytest.approx(0.0)
+    assert measurement.cell_temperature_f == pytest.approx(0.0)
+    assert measurement.board_temperature_f == pytest.approx(0.0)
     assert measurement.instant_salt_level == 0
     assert measurement.average_salt_level == 2900
 
