@@ -242,7 +242,7 @@ class OmniLogicAPI:
             Parsed chlorinator measurements or the raw XML response.
         """
         req_body = self._build_chlorinator_diagnostic_request("GetCHLORMeasurement", pool_id, chlorinator_id)
-        resp = await self.async_send_and_receive(MessageType.GET_DIAGNOSTIC, req_body)
+        resp = await self.async_send_and_receive(MessageType.GET_FILTER_DIAGNOSTIC, req_body)
         if raw:
             return resp
         return ChlorinatorMeasurement.load_xml(resp)
@@ -269,7 +269,7 @@ class OmniLogicAPI:
             Parsed relay polarity or the raw XML response.
         """
         req_body = self._build_chlorinator_diagnostic_request("GetCHLORRelayPolarity", pool_id, chlorinator_id)
-        resp = await self.async_send_and_receive(MessageType.GET_DIAGNOSTIC, req_body)
+        resp = await self.async_send_and_receive(MessageType.GET_FILTER_DIAGNOSTIC, req_body)
         if raw:
             return resp
         return ChlorinatorRelayPolarity.load_xml(resp)

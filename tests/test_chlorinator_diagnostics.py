@@ -129,12 +129,3 @@ def test_chlorinator_measurement_reports_missing_parameter() -> None:
 
     with pytest.raises(OmniParsingError, match="Missing chlorinator diagnostic parameter: VoltageLowByte"):
         _ = measurement.voltage
-
-
-def test_chlorinator_measurement_rejects_unexpected_response() -> None:
-    """Reject a response intended for a different diagnostic operation."""
-    with pytest.raises(
-        OmniParsingError,
-        match="Expected GetCHLORMeasurementRsp response, got 'GetCHLORRelayPolarityRsp'",
-    ):
-        ChlorinatorMeasurement.load_xml(POLARITY_XML)

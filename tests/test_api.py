@@ -257,7 +257,7 @@ async def test_async_get_chlorinator_measurement_generates_valid_xml() -> None:
         message_type, xml_payload = mock_send.call_args.args
         root = ET.fromstring(xml_payload)
 
-        assert message_type is MessageType.GET_DIAGNOSTIC
+        assert message_type is MessageType.GET_FILTER_DIAGNOSTIC
         assert _get_xml_tag(root) == "Request"
         assert _find_elem(root, "Name").text == "GetCHLORMeasurement"
         assert _find_param(root, "PoolID").text == "1"
@@ -278,7 +278,7 @@ async def test_async_get_chlorinator_relay_polarity_generates_valid_xml() -> Non
         message_type, xml_payload = mock_send.call_args.args
         root = ET.fromstring(xml_payload)
 
-        assert message_type is MessageType.GET_DIAGNOSTIC
+        assert message_type is MessageType.GET_FILTER_DIAGNOSTIC
         assert _get_xml_tag(root) == "Request"
         assert _find_elem(root, "Name").text == "GetCHLORRelayPolarity"
         assert _find_param(root, "PoolID").text == "1"

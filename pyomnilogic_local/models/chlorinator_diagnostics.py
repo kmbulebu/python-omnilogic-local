@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import math
-from typing import ClassVar, Self
+from typing import Self
 
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, ValidationError
 from xmltodict import parse as xml_parse
@@ -16,6 +16,7 @@ _ADC_MAX_VALUE = 255
 _VOLTAGE_SCALE = 8.15
 _CURRENT_SCALE = 0.489
 
+# OmniLogic uses 10 kΩ NTC thermistors for these temperature readings.
 # Lookup table used by OmniLogic to convert the cell and board thermistor ADC
 # readings to tenths of a degree Fahrenheit. Values between entries are
 # interpolated using the low three bits of the raw reading.
@@ -170,7 +171,6 @@ class ChlorinatorDiagnosticResponse(BaseModel):
     """Base model for parameter-based chlorinator diagnostic responses."""
 
     model_config = ConfigDict(from_attributes=True)
-    expected_response_name: ClassVar[str]
     _raw: str = PrivateAttr(default="")
 
     name: str = Field(alias="Name")
@@ -188,10 +188,6 @@ class ChlorinatorDiagnosticResponse(BaseModel):
     def load_xml(cls, xml: str) -> Self:
         """Parse a chlorinator diagnostic XML response."""
         data = xml_parse(xml, force_list=("Parameter",))
-        response_name = data.get("Response", {}).get("Name")
-        if response_name != cls.expected_response_name:
-            msg = f"Expected {cls.expected_response_name} response, got {response_name!r}"
-            raise OmniParsingError(msg)
         data["Response"]["Parameters"] = data["Response"]["Parameters"]["Parameter"]
         try:
             instance = cls.model_validate(data["Response"])
@@ -204,8 +200,6 @@ class ChlorinatorDiagnosticResponse(BaseModel):
 
 class ChlorinatorMeasurement(ChlorinatorDiagnosticResponse):
     """Electrical, temperature, and salt measurements from a chlorinator cell."""
-
-    expected_response_name = "GetCHLORMeasurementRsp"
 
     @property
     def pool_id(self) -> int:
@@ -277,8 +271,6 @@ class ChlorinatorMeasurement(ChlorinatorDiagnosticResponse):
 
 class ChlorinatorRelayPolarity(ChlorinatorDiagnosticResponse):
     """Relay polarity reported by the physical chlorinator equipment."""
-
-    expected_response_name = "GetCHLORRelayPolarityRsp"
 
     @property
     def pool_id(self) -> int:
