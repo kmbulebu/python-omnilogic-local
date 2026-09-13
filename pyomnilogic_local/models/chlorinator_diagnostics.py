@@ -5,7 +5,7 @@ from __future__ import annotations
 import math
 from typing import Self
 
-from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, ValidationError
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 from xmltodict import parse as xml_parse
 
 from pyomnilogic_local.models.exceptions import OmniParsingError
@@ -171,7 +171,6 @@ class ChlorinatorDiagnosticResponse(BaseModel):
     """Base model for parameter-based chlorinator diagnostic responses."""
 
     model_config = ConfigDict(from_attributes=True)
-    _raw: str = PrivateAttr(default="")
 
     name: str = Field(alias="Name")
     parameters: list[ChlorinatorDiagnosticParameter] = Field(alias="Parameters")
@@ -191,7 +190,6 @@ class ChlorinatorDiagnosticResponse(BaseModel):
         data["Response"]["Parameters"] = data["Response"]["Parameters"]["Parameter"]
         try:
             instance = cls.model_validate(data["Response"])
-            instance._raw = xml
         except ValidationError as exc:
             msg = f"Failed to parse chlorinator diagnostics: {exc}"
             raise OmniParsingError(msg) from exc
